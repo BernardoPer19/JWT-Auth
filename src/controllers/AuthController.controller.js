@@ -36,11 +36,7 @@ export const loginUser = async (req, res) => {
     console.log("Password ingresado:", password);
     console.log("Contraseña en base de datos:", user.password);
 
-    
-    const isPasswordValid =  UserModel.comparePassword(
-      password,
-      user.password,
-    );
+    const isPasswordValid = UserModel.comparePassword(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
@@ -52,7 +48,7 @@ export const loginUser = async (req, res) => {
     const options = {
       httpOnly: true,
       sameSite: "Strict",
-      maxAge: 1000 * 60 * 60, // 1 hora
+      maxAge: 1000 * 60 * 60,
     };
 
     res
@@ -66,6 +62,11 @@ export const loginUser = async (req, res) => {
       .json({ message: "Error en el login", error: error.message });
   }
 };
+
+export const logout = ((req, res) => {
+  res.clearCookie("access_token");
+  res.json({ message: "Logged out successfully" });
+});
 
 export const protectedRoute = async (req, res) => {
   try {
